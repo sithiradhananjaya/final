@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { listProducts } from '../actions/productActions';
 import Rating from '../components/Rating';
+import ImgSlide from './ImgSlide'
 
 function HomeScreen(props) {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -33,60 +34,60 @@ function HomeScreen(props) {
     <>
       {category && <h2>{category}</h2>}
 
-      <ul className="filter">
-        <li>
+      <div className="filter">
+        <div className="search-bar">
           <form onSubmit={submitHandler}>
             <input
+              
               name="searchKeyword"
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <button type="submit">Search</button>
           </form>
-        </li>
-        <li>
-          Sort By{' '}
-          <select name="sortOrder" onChange={sortHandler}>
+        </div>
+        <div className="sort-tab">
+          <h3>Sort By</h3>{' '}
+          <select className="selector" name="sortOrder" onChange={sortHandler}>
             <option value="">Newest</option>
             <option value="lowest">Lowest</option>
             <option value="highest">Highest</option>
           </select>
-        </li>
-      </ul>
+        </div>
+      </div>
+
+    <ImgSlide />
+
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
         <div>{error}</div>
       ) : (
-        <ul className="products">
+        <div className="mycontainer">
           {products.map((product) => (
-            <li key={product._id}>
-              <div className="card">
-              <div className="product">
+            <div className="card" key={product._id}>
                 <Link to={'/product/' + product._id}>
-                  <img
-                    className="product-image"
-                    src={product.image}
-                    alt="product"
-                  />
+                <div 
+                  className="crd-img"
+                  style={{backgroundImage:`url('${product.image}')`}}
+                 ></div>
                 </Link>
-                <div className= "card-body">
-                <div className="product-name">
-                  <Link to={'/product/' + product._id}>{product.name}</Link>
-                </div>
-                </div>
-                <div className="product-brand">{product.brand}</div>
-                <div className="product-price">LKR{product.price}</div>
-                <div className="product-rating">
+              <div className="crd-details">
+              <Link to={'/product/' + product._id}>
+                <h2>{product.name}</h2>
+                </Link>
+                <h3 className="brand">{product.brand}</h3>
+                <h3 className="price">LKR{product.price}</h3>
+              <div className="product-rating">
                   <Rating
                     value={product.rating}
                     text={product.numReviews + ' reviews'}
                   />
-                </div>
               </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
+
       )}
     </>
   );
